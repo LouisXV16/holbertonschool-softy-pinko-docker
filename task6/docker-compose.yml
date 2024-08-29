@@ -1,0 +1,47 @@
+# Define the version of the Docker Compose file format
+version: '3'
+
+# Define the services to be run
+services:
+  # Define the back-end service
+  back-end:
+    # Specify the build context and Dockerfile for the back-end service
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    # Specify the image name for the built back-end service
+    image: softy-pinko-back-end:task6
+    # Map port 5252 on the host to port 5252 on the back-end container
+    ports:
+      - 5252:5252
+
+  # Define the front-end service
+  front-end:
+    # Specify the build context and Dockerfile for the front-end service
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    # Specify the image name for the built front-end service
+    image: softy-pinko-front-end:task6
+    # Map port 9000 on the host to port 9000 on the front-end container
+    ports:
+      - 9000:9000
+    # Ensure the front-end service starts after the back-end service
+    depends_on:
+      - back-end
+
+  # Define the proxy service
+  proxy:
+    # Specify the build context and Dockerfile for the proxy service
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    # Specify the image name for the built proxy service
+    image: softy-pinko-proxy:task6
+    # Map port 80 on the host to port 80 on the proxy container
+    ports:
+      - 80:80
+    # Ensure the proxy service starts after the front-end and back-end services
+    depends_on:
+      - front-end
+      - back-end
